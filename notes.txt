@@ -1,0 +1,113 @@
+D. Dijkstra’s Algorithm and Inversion Handling (dijkstra.c)
+Issue 5: Inversion Logic Not Implemented
+What’s happening:
+In findShortestPath(), there is an if‑else checking current->hasInvertButton but both branches perform the same operations on the tunnel edges. Moreover, the parameter invertedMaze is never used.
+
+Fix / Future Work:
+The intended behavior is to allow switching between two “states” (normal and inverted) when at a chamber with an invert button. The correct implementation should:
+
+Maintain two distances per chamber (one for the “normal” state and one for the “inverted” state).
+
+Relax edges from the appropriate graph:
+
+When in state 0 (normal), use maze->tunnels.
+
+When in state 1 (inverted), use invertedMaze->tunnels.
+
+Allow a zero‑cost state change:
+
+At any chamber with an invert button, you may “flip” (from state 0 to 1 or vice versa) and then use the edges of the other maze.
+
+Track predecessors and button presses for path reconstruction.
+
+This will require re‑structuring your algorithm so that each “node” in your search is a pair (chamber, state). Your heap and distance arrays must be extended to account for these two states.
+
+Note:
+Since the algorithm currently only computes distances and not the actual path, you’ll also need to record predecessor pointers (and which state you came from) to later reconstruct the unique path and output the chamber numbers along with an ‘R’ when a button is pressed.
+
+3. Step‑by‑Step Plan for Completing the Assignment
+Below is a detailed plan to extend your project, especially to handle the invert maze routes within Dijkstra’s algorithm:
+
+Step 1: Fix the Current Bugs
+Indexing Fixes in readInput.c:
+– Adjust the invert button assignment and tunnel reading to use 0‑based indexing (as explained above).
+
+Allocate maze->tunnels:
+– Modify createMaze() in Maze.c to allocate the tunnels array.
+
+Parameter Correction in main.c:
+– Replace invertMaze with mazeInvert when calling findShortestPath().
+
+Step 2: Redesign the Dijkstra’s Algorithm for Two States
+Extend the Data Structures:
+– Create a new structure (e.g., typedef struct NodeState { Chamber *chamber; int state; } NodeState;) to represent a state node where state is 0 (normal) or 1 (inverted).
+– Maintain a 2D array for distances: dist[chamber_index][state] (or a flat array of size numberOfChambers * 2). – Create a similar structure for predecessor pointers (e.g., store predecessor as a NodeState pointer or index).
+
+Update the Heap:
+– Change the heap so that it stores NodeState objects instead of raw Chamber*. The heap ordering should be based on the distance value for that state.
+
+Relaxation Logic:
+– When you extract a node (current, state) from the heap, choose the tunnel list based on the state:
+
+If state == 0, use maze->tunnels[current->index].
+
+If state == 1, use invertedMaze->tunnels[current->index]. – For every outgoing tunnel from the current node, update the neighbor’s distance in the same state if a shorter path is found.
+
+Handling the Invert Button:
+– If the current chamber has an invert button, allow a transition from (current, state) to (current, 1 - state) at zero cost.
+– Relax this “edge” (i.e. if dist[current][1 - state] > dist[current][state]) then update and insert (current, 1 - state) into the heap.
+
+Path Reconstruction:
+– Along with updating distances, record a predecessor pointer (and whether a state change occurred) for each (chamber, state) pair.
+– After reaching the exit (which is chamber n in either state), backtrack using these pointers to reconstruct the unique shortest path.
+– When outputting the path, for any state change (where the predecessor’s state is different), print an ‘R’ right after that chamber number.
+
+Step 3: Refactor and Modularize Your Code
+Separate Functions:
+– You might want to create separate functions for handling state transitions and for relaxing edges.
+
+Path Output:
+– Write a function that, given the predecessor pointers, outputs the total distance and the sequence of chamber numbers (in the correct order), appending an ‘R’ when a state flip occurs.
+
+Step 4: Testing and Validation
+Use Provided Test Cases:
+– Run your code against the sample input (as given in your PDF) to verify that the output matches exactly the expected path and total distance.
+
+Edge Cases:
+– Consider cases where no path exists (should print “IMPOSSIBLE”) and cases where the shortest path requires no state changes.
+
+Performance:
+– Since efficiency is important, ensure your heap operations and distance updates are efficient, especially given that the state space doubles the number of nodes.
+
+5. Next Steps and Implementation Plan
+To complete your assignment and properly handle the invert maze routes in Dijkstra’s algorithm, follow these steps:
+
+Apply the Above Fixes:
+– Correct the indexing in readInput.c and allocate the tunnels array in createMaze().
+– Fix the parameter in main.c.
+
+Design the Two‑State Search:
+– Define a new structure (e.g., NodeState) for a pair (chamber, state).
+– Create distance and predecessor arrays that are indexed by [chamber_index][state].
+
+Modify the Heap:
+– Adapt your heap to work with NodeState instead of just Chamber*.
+– Ensure that the comparison for ordering uses the distance for that state.
+
+Implement the Modified Dijkstra’s Algorithm:
+– When extracting a node, choose the tunnel list based on its current state:
+
+Normal (state 0): use maze->tunnels.
+
+Inverted (state 1): use invertedMaze->tunnels. – For each edge, relax the neighbor’s distance in the same state. – At any chamber with an invert button, also relax the possibility of switching state with no additional cost. – Update your heap accordingly for both types of relaxations.
+
+Implement Path Reconstruction:
+– Store predecessor pointers (and the state at which you arrived) when relaxing edges.
+– After reaching the exit (chamber n in either state), backtrack from the exit to the start.
+– When outputting the path, if a state change occurred at a chamber (i.e. the predecessor’s state differs from the current state), print an ‘R’ right after that chamber’s number.
+
+Test Rigorously:
+– Verify your implementation using the sample provided in the PDF as well as additional test cases.
+– Ensure that the program prints “IMPOSSIBLE” when no path exists.
+
+By following this plan and incorporating the fixes described above, you will address both the immediate syntax/logic errors and implement the crucial feature of handling invert maze routes in your Dijkstra’s algorithm.

@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "maze.h": "c",
+    "string.h": "c"
+  }
+}
