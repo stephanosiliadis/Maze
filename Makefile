@@ -8,7 +8,7 @@ maze: main.c Maze.c Heap.c helpers.c
 
 # Clean compiled files and analysis outputs
 clean:
-	rm -f maze valgrind.log massif.out massif.txt callgrind.out
+	rm -f maze valgrind.log massif.out massif.txt callgrind.out xtmemory.kcg.*
 
 #  Memory Leak Debugging
 # Use this to check for memory leaks, invalid accesses, and uninitialized memory
