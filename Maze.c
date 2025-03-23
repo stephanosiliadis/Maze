@@ -66,8 +66,14 @@ void freeMaze(Maze *maze) {
       free(temp);
     }
   }
-  free(maze->tunnels);
+
+  for (int i = 0; i < maze->numberOfChambers; i++) {
+    if (maze->chambers[i] != NULL) {
+      freeChamber(maze->chambers[i]);
+    }
+  }
   free(maze->chambers);
+  free(maze->tunnels);
   free(maze);
 }
 

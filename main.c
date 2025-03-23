@@ -23,5 +23,9 @@ int main(int argc, const char *argv[]) {
   // Solve maze using the modified Dijkstra’s algorithm.
   findShortestPath(mazeOrig, mazeInvert);
 
+  // free mazes after use
+  freeMaze(mazeOrig);
+  freeMaze(mazeInvert);
+
   return 0;
 }
