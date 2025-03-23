@@ -1,4 +1,6 @@
 .vscode/*
-tests/
 maze
 notes.txt
+massif.*
+xtmemory.kcg.*
+callgrind.out
