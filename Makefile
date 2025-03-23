@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -g -O2 -Wall -pedantic -Wno-unused-result -lm
 
-maze: main.c Maze.c Heap.c
+maze: main.c Maze.c Heap.c helpers.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 .PHONY: clean debug-maze
