@@ -98,6 +98,14 @@ NodeState *findShortestPath(Maze *maze, Maze *invertedMaze) {
 
   if (bestExit->distance == INF) {
     printf("IMPOSSIBLE\n");
+    for (int i = 0; i < n; i++) free(visited[i]);
+    free(visited);
+    freeHeap(heap);
+
+    for (int i = 0; i < totalNodes; i++) {
+      free(nodes[i]);
+    }
+    free(nodes);
     return NULL;
   }
 
