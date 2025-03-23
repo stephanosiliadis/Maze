@@ -24,16 +24,13 @@ debug-maze: maze
 # - VIS=massif  → opens in massif-visualizer (default)
 # - VIS=kcache  → opens in kcachegrind
 profile-maze: maze
-	valgrind --tool=massif --massif-out-file=massif.out ./maze
+	valgrind --tool=massif --massif-out-file=massif.out --xtree-memory=full ./maze
 	ms_print massif.out > massif.txt
 	@echo "Heap profile saved to massif.out and massif.txt"
 	@if [ "$(VIS)" = "kcache" ]; then \
 		command -v kcachegrind >/dev/null && kcachegrind massif.out || echo "kcachegrind not found."; \
-	elif [ "$(VIS)" = "massif" ]; then \
+	elif [ "$(VIS)" = "massif" ] || [ -z "$(VIS)" ]; then \
 		command -v massif-visualizer >/dev/null && massif-visualizer massif.out || echo "massif-visualizer not found."; \
-	elif [ -z "$(VIS)" ]; then \
-		echo "VIS not set. Falling back to Flatpak launch..."; \
-		flatpak run --env=DBUS_SESSION_BUS_ADDRESS=/dev/null org.kde.massif-visualizer massif.out; \
 	else \
 		echo "Unknown VIS value: $(VIS). Use VIS=massif or VIS=kcache."; \
 	fi
@@ -47,11 +44,3 @@ cpu-profile-maze: maze
 	@echo "CPU profile written to callgrind.out"
 	@command -v kcachegrind >/dev/null && kcachegrind callgrind.out || \
 	echo "kcachegrind not found. Please install it to visualize callgrind output."
-
-
-# Open Massif Visualizer using Flatpak
-viz: maze
-	valgrind --tool=massif --massif-out-file=massif.out ./maze
-	ms_print massif.out > massif.txt
-	@echo "Heap profile saved to massif.out and massif.txt"
-	flatpak run --env=DBUS_SESSION_BUS_ADDRESS=/dev/null org.kde.massif-visualizer massif.out
