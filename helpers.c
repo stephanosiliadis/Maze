@@ -38,7 +38,7 @@ Maze *readInput() {
 }
 
 // Note: NodeState is already defined in Heap.h.
-NodeState *findShortestPath(Maze *maze, Maze *invertedMaze, Chamber *entrance) {
+NodeState *findShortestPath(Maze *maze, Maze *invertedMaze) {
   int n = maze->numberOfChambers;
   int totalNodes = n * 2;  // Each chamber has 2 states.
 

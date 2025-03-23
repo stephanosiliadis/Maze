@@ -1,4 +1,4 @@
 #include "Maze.h"
 
 Maze *readInput();
-NodeState *findShortestPath(Maze *maze, Maze *invertedMaze, Chamber *entrance);
+NodeState *findShortestPath(Maze *maze, Maze *invertedMaze);
