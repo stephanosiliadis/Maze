@@ -82,7 +82,9 @@ Maze *invertMaze(Maze *maze) {
   int m = maze->numberOfTunnels;
   Maze *invertedMaze = createMaze(n, m);
   for (int i = 0; i < n; i++) {
-    invertedMaze->chambers[i] = maze->chambers[i];
+    Chamber *original = maze->chambers[i];
+    Chamber *copy = createChamber(original->index, original->hasInvertButton);
+    invertedMaze->chambers[i] = copy;
   }
   for (int i = 0; i < n; i++) {
     Tunnel *current = maze->tunnels[i];

@@ -24,7 +24,7 @@ debug-maze: maze
 # - VIS=massif  → opens in massif-visualizer (default)
 # - VIS=kcache  → opens in kcachegrind
 profile-maze: maze
-	valgrind --tool=massif --massif-out-file=massif.out --xtree-memory=full ./maze
+	valgrind --tool=massif --massif-out-file=massif.out ./maze
 	ms_print massif.out > massif.txt
 	@echo "Heap profile saved to massif.out and massif.txt"
 	@if [ "$(VIS)" = "kcache" ]; then \
