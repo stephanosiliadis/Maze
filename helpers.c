@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "helpers.h"
 #include "Heap.h"
-#include "Maze.h"
 
 #define INF (1 << 30)
 
