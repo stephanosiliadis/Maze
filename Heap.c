@@ -53,8 +53,10 @@ void insertNodeState(Heap *heap, NodeState *node) {
 }
 
 NodeState *popMinNodeState(Heap *heap) {
-  if (heap->size == 0)
+  if (heap->size == 0) {
     return NULL;
+  }
+
   // The root node holds the minimum distance.
   NodeState *min = heap->nodes[0];
   heap->size--;
