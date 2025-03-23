@@ -8,6 +8,7 @@ Heap *createHeap() {
   Heap *heap = calloc(1, sizeof(Heap));
   heap->capacity = 10;
   heap->size = 0;
+  
   // Allocate an array of NodeState* pointers
   heap->nodes = calloc(heap->capacity, sizeof(NodeState *));
 
