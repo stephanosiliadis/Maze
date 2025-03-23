@@ -114,7 +114,7 @@ NodeState *findShortestPath(Maze *maze, Maze *invertedMaze) {
   for (int i = count - 1; i >= 0; i--) {
     if (i > 0 && path[i]->chamber->hasInvertButton && path[i]->state != path[i - 1]->state) {
       printf("%d R\n", path[i]->chamber->index);
-    } else {
+    } else if (i == count - 1 || !(path[i]->chamber->hasInvertButton && path[i]->state != path[i + 1]->state)) {
       printf("%d\n", path[i]->chamber->index);
     }
   }
