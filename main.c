@@ -13,17 +13,17 @@
 
 #include "Heap.h"
 #include "Maze.h"
-#include "dijkstra.c"
+#include "dijkstra.c"  // Or include a header if you separate the function declarations.
 #include "readInput.c"
 
 int main(int argc, const char *argv[]) {
-  // Create original and inverted Maze based on input and get the entrance.
-  Maze *origMaze = readInput();
-  Maze *invertedMaze = invertMaze(origMaze);
-  Chamber *entrance = origMaze->chambers[0];
+   // Create maze based on input.
+   Maze *mazeOrig = readInput();
+   Maze *mazeInvert = invertMaze(mazeOrig);
+   Chamber *entrance = mazeOrig->chambers[0];
 
-  // Solve maze.
-  findShortestPath(origMaze, invertedMaze, entrance);
+   // Solve maze using the modified Dijkstra’s algorithm.
+   findShortestPath(mazeOrig, mazeInvert, entrance);
 
-  return 0;
+   return 0;
 }
