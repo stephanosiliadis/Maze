@@ -8,12 +8,13 @@ Heap *createHeap() {
   Heap *heap = calloc(1, sizeof(Heap));
   heap->capacity = 10;
   heap->size = 0;
-  heap->chambers = calloc(heap->capacity, sizeof(Chamber *));
+  // Allocate an array of NodeState* pointers
+  heap->nodes = calloc(heap->capacity, sizeof(NodeState *));
 
   return heap;
 }
 
-// 0-indexed helper functions:
+// Helper functions for index calculation (0-indexed)
 static int parent(int index) {
   return (index - 1) / 2;
 }
@@ -26,55 +27,57 @@ static int right(int index) {
   return 2 * index + 2;
 }
 
-void insertChamber(Heap *heap, Chamber *chamber) {
+void insertNodeState(Heap *heap, NodeState *node) {
+  // Grow the heap array if needed.
   if (heap->size == heap->capacity) {
     heap->capacity *= 2;
-    heap->chambers = realloc(heap->chambers, heap->capacity * sizeof(Chamber *));
+    heap->nodes = realloc(heap->nodes, heap->capacity * sizeof(NodeState *));
   }
   int currentIndex = heap->size;
-  heap->chambers[currentIndex] = chamber;
+  heap->nodes[currentIndex] = node;
   heap->size++;
+
+  // Bubble up to maintain min-heap property based on node->distance.
   while (currentIndex > 0) {
-    int parentIndex = parent(currentIndex);
-    if (heap->chambers[parentIndex]->minDistance > heap->chambers[currentIndex]->minDistance) {
-      Chamber *temp = heap->chambers[parentIndex];
-      heap->chambers[parentIndex] = heap->chambers[currentIndex];
-      heap->chambers[currentIndex] = temp;
-      currentIndex = parentIndex;
+    int p = parent(currentIndex);
+    if (heap->nodes[p]->distance > heap->nodes[currentIndex]->distance) {
+      NodeState *temp = heap->nodes[p];
+      heap->nodes[p] = heap->nodes[currentIndex];
+      heap->nodes[currentIndex] = temp;
+      currentIndex = p;
     } else {
       break;
     }
   }
 }
 
-Chamber *popMinDistanceChamber(Heap *heap) {
-  if (heap->size == 0) {
+NodeState *popMinNodeState(Heap *heap) {
+  if (heap->size == 0)
     return NULL;
-  }
-  Chamber *min = heap->chambers[0];
+  // The root node holds the minimum distance.
+  NodeState *min = heap->nodes[0];
   heap->size--;
-  heap->chambers[0] = heap->chambers[heap->size];
+  // Move the last element to the root.
+  heap->nodes[0] = heap->nodes[heap->size];
   int index = 0;
+  // Bubble down to restore the heap property.
   while (1) {
     int l = left(index);
     int r = right(index);
     int smallest = index;
-    if (l < heap->size && heap->chambers[l]->minDistance < heap->chambers[smallest]->minDistance) {
+    if (l < heap->size && heap->nodes[l]->distance < heap->nodes[smallest]->distance)
       smallest = l;
-    }
-    if (r < heap->size && heap->chambers[r]->minDistance < heap->chambers[smallest]->minDistance) {
+    if (r < heap->size && heap->nodes[r]->distance < heap->nodes[smallest]->distance)
       smallest = r;
-    }
     if (smallest != index) {
-      Chamber *temp = heap->chambers[index];
-      heap->chambers[index] = heap->chambers[smallest];
-      heap->chambers[smallest] = temp;
+      NodeState *temp = heap->nodes[index];
+      heap->nodes[index] = heap->nodes[smallest];
+      heap->nodes[smallest] = temp;
       index = smallest;
     } else {
       break;
     }
   }
-
   return min;
 }
 
@@ -83,6 +86,6 @@ int isHeapEmpty(Heap *heap) {
 }
 
 void freeHeap(Heap *heap) {
-  free(heap->chambers);
+  free(heap->nodes);
   free(heap);
 }

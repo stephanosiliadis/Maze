@@ -7,10 +7,12 @@ typedef struct Chamber {
   int minDistance;
 } Chamber;
 
-typedef struct ChamberState {
+typedef struct NodeState {
   Chamber *chamber;
   int state;
-} ChamberState;
+  int distance;
+  struct NodeState *prev;
+} NodeState;
 
 typedef struct Tunnel *TunnelPointer;
 typedef struct Tunnel {

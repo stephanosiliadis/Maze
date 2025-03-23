@@ -4,14 +4,14 @@
 #include "Maze.h"
 
 typedef struct Heap {
-  Chamber **chambers;
+  NodeState **nodes;
   int size;
   int capacity;
 } Heap;
 
 Heap *createHeap();
-void insertChamber(Heap *heap, Chamber *chamber);
-Chamber *popMinDistanceChamber(Heap *heap);
+void insertNodeState(Heap *heap, NodeState *node);
+NodeState *popMinNodeState(Heap *heap);
 int isHeapEmpty(Heap *heap);
 void freeHeap(Heap *heap);
 
