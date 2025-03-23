@@ -1,7 +1,8 @@
+#include "helpers.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "helpers.h"
 #include "Heap.h"
 
 #define INF (1 << 30)
@@ -111,9 +112,11 @@ NodeState *findShortestPath(Maze *maze, Maze *invertedMaze) {
   }
 
   for (int i = count - 1; i >= 0; i--) {
-    printf("%d\n", path[i]->chamber->index);
-    if (i > 0 && path[i]->chamber->hasInvertButton && path[i]->state != path[i - 1]->state)
-      printf("R\n");
+    if (i > 0 && path[i]->chamber->hasInvertButton && path[i]->state != path[i - 1]->state) {
+      printf("%d R\n", path[i]->chamber->index);
+    } else {
+      printf("%d\n", path[i]->chamber->index);
+    }
   }
   free(path);
   for (int i = 0; i < n; i++) free(visited[i]);
