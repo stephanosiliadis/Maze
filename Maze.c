@@ -1,5 +1,5 @@
-// --- File: Maze.c ---
 #include "Maze.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,11 +8,15 @@ Chamber *createChamber(int index, int hasInvertButton) {
   chamber->index = index;
   chamber->hasInvertButton = hasInvertButton;
   chamber->minDistance = 1 << 30;
+
   return chamber;
 }
 
 void freeChamber(Chamber *chamber) {
-  if (!chamber) return;
+  if (!chamber) {
+    return;
+  }
+
   free(chamber);
 }
 
@@ -21,11 +25,15 @@ Tunnel *createTunnel(int weight, Chamber *to) {
   newTunnel->weight = weight;
   newTunnel->to = to;
   newTunnel->next = NULL;
+
   return newTunnel;
 }
 
 void freeTunnel(Tunnel *tunnel) {
-  if (!tunnel) return;
+  if (!tunnel) {
+    return;
+  }
+
   free(tunnel);
 }
 
@@ -35,6 +43,7 @@ Maze *createMaze(int numberOfChambers, int numberOfTunnels) {
   maze->numberOfTunnels = numberOfTunnels;
   maze->chambers = calloc(numberOfChambers, sizeof(Chamber *));
   maze->tunnels = calloc(numberOfChambers, sizeof(Tunnel *));
+
   return maze;
 }
 
@@ -57,7 +66,9 @@ void printMaze(Maze *maze) {
 }
 
 void freeMaze(Maze *maze) {
-  if (!maze) return;
+  if (!maze) {
+    return;
+  }
   for (int i = 0; i < maze->numberOfChambers; i++) {
     Tunnel *tunnel = maze->tunnels[i];
     while (tunnel) {
@@ -66,12 +77,12 @@ void freeMaze(Maze *maze) {
       free(temp);
     }
   }
-
-  for (int i = 0; i < maze->numberOfChambers; i++) {
-    if (maze->chambers[i] != NULL) {
-      freeChamber(maze->chambers[i]);
+  for (int chamber = 0; chamber < maze->numberOfChambers; chamber++) {
+    if (maze->chambers[chamber] != NULL) {
+      freeChamber(maze->chambers[chamber]);
     }
   }
+
   free(maze->chambers);
   free(maze->tunnels);
   free(maze);
@@ -95,5 +106,6 @@ Maze *invertMaze(Maze *maze) {
       current = current->next;
     }
   }
+
   return invertedMaze;
 }
