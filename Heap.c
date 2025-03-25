@@ -8,14 +8,12 @@ Heap *createHeap() {
   Heap *heap = calloc(1, sizeof(Heap));
   heap->capacity = 10;
   heap->size = 0;
-
-  // Allocate an array of NodeState* pointers
   heap->nodes = calloc(heap->capacity, sizeof(NodeState *));
 
   return heap;
 }
 
-// Helper functions for index calculation (0-indexed)
+// Helper functions for index calculation (0-indexed).
 static int parent(int index) {
   return (index - 1) / 2;
 }
@@ -40,12 +38,12 @@ void insertNodeState(Heap *heap, NodeState *node) {
 
   // Bubble up to maintain min-heap property based on node->distance.
   while (currentIndex > 0) {
-    int p = parent(currentIndex);
-    if (heap->nodes[p]->distance > heap->nodes[currentIndex]->distance) {
-      NodeState *temp = heap->nodes[p];
-      heap->nodes[p] = heap->nodes[currentIndex];
+    int parentIndex = parent(currentIndex);
+    if (heap->nodes[parentIndex]->distance > heap->nodes[currentIndex]->distance) {
+      NodeState *temp = heap->nodes[parentIndex];
+      heap->nodes[parentIndex] = heap->nodes[currentIndex];
       heap->nodes[currentIndex] = temp;
-      currentIndex = p;
+      currentIndex = parentIndex;
     } else {
       break;
     }
@@ -60,27 +58,32 @@ NodeState *popMinNodeState(Heap *heap) {
   // The root node holds the minimum distance.
   NodeState *min = heap->nodes[0];
   heap->size--;
+
   // Move the last element to the root.
   heap->nodes[0] = heap->nodes[heap->size];
   int index = 0;
+
   // Bubble down to restore the heap property.
   while (1) {
-    int l = left(index);
-    int r = right(index);
-    int smallest = index;
-    if (l < heap->size && heap->nodes[l]->distance < heap->nodes[smallest]->distance)
-      smallest = l;
-    if (r < heap->size && heap->nodes[r]->distance < heap->nodes[smallest]->distance)
-      smallest = r;
-    if (smallest != index) {
-      NodeState *temp = heap->nodes[index];
-      heap->nodes[index] = heap->nodes[smallest];
-      heap->nodes[smallest] = temp;
-      index = smallest;
+    int leftIndex = left(index);
+    int rightIndex = right(index);
+    int currentIndex = index;
+    if (leftIndex < heap->size && heap->nodes[leftIndex]->distance < heap->nodes[currentIndex]->distance) {
+      currentIndex = leftIndex;
+    }
+    if (rightIndex < heap->size && heap->nodes[rightIndex]->distance < heap->nodes[currentIndex]->distance) {
+      currentIndex = rightIndex;
+    }
+    if (currentIndex != index) {
+      NodeState *aux = heap->nodes[index];
+      heap->nodes[index] = heap->nodes[currentIndex];
+      heap->nodes[currentIndex] = aux;
+      index = currentIndex;
     } else {
       break;
     }
   }
+
   return min;
 }
 
