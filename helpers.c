@@ -38,6 +38,19 @@ Maze *readInput() {
   return maze;
 }
 
+// Function to free reserved memory for most of the created instances used for Dijkstra's Algorithm.
+static void freeMemory(int **visited, int visitedLength, Heap *heap, NodeState **nodes, int nodesLength) {
+  for (int i = 0; i < visitedLength; i++) {
+    free(visited[i]);
+  }
+  free(visited);
+  freeHeap(heap);
+  for (int node = 0; node < nodesLength; node++) {
+    free(nodes[node]);
+  }
+  free(nodes);
+}
+
 void findShortestPath(Maze *maze, Maze *invertedMaze) {
   int n = maze->numberOfChambers;
   int totalNodes = n * 2;
@@ -111,15 +124,7 @@ void findShortestPath(Maze *maze, Maze *invertedMaze) {
     printf("IMPOSSIBLE\n");
 
     // Free all reserved memory and return.
-    for (int i = 0; i < n; i++) {
-      free(visited[i]);
-    }
-    free(visited);
-    freeHeap(heap);
-    for (int i = 0; i < totalNodes; i++) {
-      free(nodes[i]);
-    }
-    free(nodes);
+    freeMemory(visited, n, heap, nodes, totalNodes);
     return;
   }
 
@@ -148,13 +153,5 @@ void findShortestPath(Maze *maze, Maze *invertedMaze) {
 
   // Free all reserved memory.
   free(path);
-  for (int i = 0; i < n; i++) {
-    free(visited[i]);
-  }
-  free(visited);
-  freeHeap(heap);
-  for (int i = 0; i < totalNodes; i++) {
-    free(nodes[i]);
-  }
-  free(nodes);
+  freeMemory(visited, n, heap, nodes, totalNodes);
 }
