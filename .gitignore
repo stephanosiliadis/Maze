@@ -5,3 +5,4 @@ massif.*
 xtmemory.kcg.*
 callgrind.out
 Makefile
+org.kde.massif-visualizer/
