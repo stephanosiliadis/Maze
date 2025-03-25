@@ -16,14 +16,14 @@
 #include "helpers.h"
 
 int main(int argc, const char *argv[]) {
-  // Create maze based on input.
+  // Create maze based on input and create the inverted version of it.
   Maze *mazeOrig = readInput();
   Maze *mazeInvert = invertMaze(mazeOrig);
 
   // Solve maze using the modified Dijkstra’s algorithm.
   findShortestPath(mazeOrig, mazeInvert);
 
-  // free mazes after use
+  // Free reserved memory for the Maze instances.
   freeMaze(mazeOrig);
   freeMaze(mazeInvert);
 
