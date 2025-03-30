@@ -21,7 +21,7 @@ Maze *readInput() {
     maze->chambers[chamberIndex - 1] = newChamber;
   }
 
-  // Read which Chambers that have an invert button.
+  // Read which Chambers have an invert button.
   scanf("%d", &chamberWithInvertButton);
   while (chamberWithInvertButton != -1) {
     maze->chambers[chamberWithInvertButton - 1]->hasInvertButton = 1;
